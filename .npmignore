@@ -1,0 +1,8 @@
+src/
+.github/
+node_modules/
+*.tgz
+tsconfig.json
+.eslintrc*
+.prettierrc*
+.gitignore

@@ -1,0 +1,161 @@
+{
+  "id": "sportmonks-football-live-001",
+  "name": "SportMonks – Football Live Dashboard",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds",
+              "secondsInterval": 30
+            }
+          ]
+        }
+      },
+      "id": "trigger-schedule",
+      "name": "Every 30 Seconds",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "resource": "livescores",
+        "operation": "inplay",
+        "include": ["participants", "scores", "events", "periods", "league.country", "round"],
+        "page": 1
+      },
+      "id": "get-inplay",
+      "name": "Get Inplay Livescores",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-empty",
+              "leftValue": "={{ $json._empty }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "filter-empty",
+      "name": "Has Active Matches?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build a readable summary for each live fixture\nconst fixture = $input.item.json;\n\n// Find current score from scores array\nconst scores = fixture.scores ?? [];\nconst currentScores = scores.filter(s => s.description === 'CURRENT');\n\nlet homeGoals = 0;\nlet awayGoals = 0;\nlet homeTeamName = 'Home';\nlet awayTeamName = 'Away';\n\nconst participants = fixture.participants ?? [];\nconst homeTeam = participants.find(p => p.meta?.location === 'home');\nconst awayTeam = participants.find(p => p.meta?.location === 'away');\n\nif (homeTeam) homeTeamName = homeTeam.name;\nif (awayTeam) awayTeamName = awayTeam.name;\n\nfor (const score of currentScores) {\n  const participant = participants.find(p => p.id === score.participant_id);\n  if (!participant) continue;\n  if (participant.meta?.location === 'home') homeGoals = score.score?.goals ?? 0;\n  if (participant.meta?.location === 'away') awayGoals = score.score?.goals ?? 0;\n}\n\n// Count key events\nconst events = fixture.events ?? [];\nconst goals = events.filter(e => e.type?.code === 'goal');\nconst yellowCards = events.filter(e => e.type?.code === 'yellowcard');\nconst redCards = events.filter(e => e.type?.code === 'redcard' || e.type?.code === 'yellowredcard');\nconst substitutions = events.filter(e => e.type?.code === 'substitution');\n\n// Current period\nconst periods = fixture.periods ?? [];\nconst activePeriod = periods.find(p => p.ticking === true);\nconst currentMinute = activePeriod ? activePeriod.minutes : null;\n\nreturn {\n  fixture_id: fixture.id,\n  match: fixture.name,\n  league: fixture.league?.name ?? 'Unknown',\n  country: fixture.league?.country?.name ?? 'Unknown',\n  score: `${homeTeamName} ${homeGoals} - ${awayGoals} ${awayTeamName}`,\n  home_team: homeTeamName,\n  away_team: awayTeamName,\n  home_goals: homeGoals,\n  away_goals: awayGoals,\n  current_minute: currentMinute,\n  total_goals: goals.length,\n  yellow_cards: yellowCards.length,\n  red_cards: redCards.length,\n  substitutions: substitutions.length,\n  result_info: fixture.result_info,\n  starting_at: fixture.starting_at,\n  round: fixture.round?.name ? `Round ${fixture.round.name}` : null,\n  goal_events: goals.map(g => ({\n    minute: g.minute,\n    player: g.player_name,\n    team: participants.find(p => p.id === g.participant_id)?.name ?? 'Unknown',\n    assist: g.related_player_name,\n    result: g.result\n  }))\n};\n"
+      },
+      "id": "format-fixture",
+      "name": "Format Match Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "matches",
+        "include": "noOtherFields"
+      },
+      "id": "aggregate-matches",
+      "name": "Collect All Matches",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const matches = $input.item.json.matches ?? [];\n\nif (matches.length === 0) {\n  return { summary: 'No live matches at the moment', total_matches: 0 };\n}\n\n// Group matches by league\nconst byLeague = {};\nfor (const m of matches) {\n  const league = m.league ?? 'Unknown';\n  if (!byLeague[league]) byLeague[league] = [];\n  byLeague[league].push(m.score);\n}\n\nconst lines = [];\nfor (const [league, scores] of Object.entries(byLeague)) {\n  lines.push(`${league}:`);\n  for (const s of scores) lines.push(`  ${s}`);\n}\n\nreturn {\n  summary: lines.join('\\n'),\n  total_matches: matches.length,\n  total_goals: matches.reduce((acc, m) => acc + m.total_goals, 0),\n  matches\n};\n"
+      },
+      "id": "build-report",
+      "name": "Build Live Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 300]
+    }
+  ],
+  "connections": {
+    "Every 30 Seconds": {
+      "main": [
+        [
+          {
+            "node": "Get Inplay Livescores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Inplay Livescores": {
+      "main": [
+        [
+          {
+            "node": "Has Active Matches?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Active Matches?": {
+      "main": [
+        [
+          {
+            "node": "Format Match Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Match Summary": {
+      "main": [
+        [
+          {
+            "node": "Collect All Matches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect All Matches": {
+      "main": [
+        [
+          {
+            "node": "Build Live Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "triggerCount": 1,
+  "updatedAt": "2026-03-11T00:00:00.000Z",
+  "versionId": "1"
+}

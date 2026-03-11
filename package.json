@@ -1,0 +1,61 @@
+{
+  "name": "n8n-nodes-sportmonks",
+  "version": "0.1.0",
+  "description": "n8n community node for the SportMonks Football API v3 — live scores, fixtures, teams, players, leagues and standings",
+  "keywords": [
+    "n8n-community-node-package",
+    "sportmonks",
+    "football",
+    "soccer",
+    "livescores",
+    "fixtures",
+    "n8n"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Arthur Rahimov",
+    "email": "arthur.ragimov@gmail.com",
+    "url": "https://ragmon.nl"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ragmon/n8n-nodes-sportmonks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ragmon/n8n-nodes-sportmonks/issues"
+  },
+  "homepage": "https://github.com/ragmon/n8n-nodes-sportmonks#readme",
+  "main": "dist/nodes/SportMonks/SportMonks.node.js",
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/SportMonksApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/SportMonks/SportMonks.node.js"
+    ]
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && npm run copy:icons",
+    "copy:icons": "cp src/nodes/SportMonks/sportmonks.svg dist/nodes/SportMonks/sportmonks.svg",
+    "dev": "tsc -p tsconfig.json --watch",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "n8n-workflow": "^1.72.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.7.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": ">=1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

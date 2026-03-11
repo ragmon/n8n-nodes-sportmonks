@@ -1,0 +1,375 @@
+{
+  "id": "sportmonks-demo-all-features",
+  "name": "SportMonks Football – Full Feature Demo",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 500]
+    },
+
+    {
+      "parameters": {
+        "content": "## SportMonks Football – Full Feature Demo\n\nThis workflow demonstrates **every resource and operation** available in the `n8n-nodes-sportmonks` community node.\n\n**Before running:**\n1. Add a **SportMonks API** credential\n2. Assign it to each SportMonks node\n3. Run manually with the Manual Trigger\n\nEach branch demonstrates a different resource. Outputs are collected and merged into a final summary.\n\n[SportMonks Docs](https://docs.sportmonks.com/v3)",
+        "height": 260,
+        "width": 480,
+        "color": 5
+      },
+      "id": "note-intro",
+      "name": "Sticky Note – Intro",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, 200]
+    },
+
+    {
+      "parameters": {
+        "content": "### Livescores\nGet matches that are currently being played, all matches for today, and the most recently updated ones.",
+        "height": 120,
+        "width": 360,
+        "color": 3
+      },
+      "id": "note-livescores",
+      "name": "Sticky Note – Livescores",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [600, 60]
+    },
+    {
+      "parameters": {
+        "resource": "livescores",
+        "operation": "inplay",
+        "include": ["participants", "scores", "events", "periods", "league.country", "round"],
+        "page": 1
+      },
+      "id": "livescores-inplay",
+      "name": "Livescores – Inplay",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [600, 200]
+    },
+    {
+      "parameters": {
+        "resource": "livescores",
+        "operation": "all",
+        "include": ["participants", "scores", "league"],
+        "page": 1
+      },
+      "id": "livescores-all",
+      "name": "Livescores – All Today",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [600, 340]
+    },
+    {
+      "parameters": {
+        "resource": "livescores",
+        "operation": "latest",
+        "include": ["participants", "scores"],
+        "page": 1
+      },
+      "id": "livescores-latest",
+      "name": "Livescores – Latest Updated",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [600, 480]
+    },
+
+    {
+      "parameters": {
+        "content": "### Fixtures\nFetch matches by ID, date, date range, head-to-head, or search by name.",
+        "height": 120,
+        "width": 360,
+        "color": 4
+      },
+      "id": "note-fixtures",
+      "name": "Sticky Note – Fixtures",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [900, 60]
+    },
+    {
+      "parameters": {
+        "resource": "fixture",
+        "operation": "getByDate",
+        "date": "={{ $now.format('yyyy-MM-dd') }}",
+        "include": ["participants", "scores", "league", "round"],
+        "page": 1
+      },
+      "id": "fixtures-by-date",
+      "name": "Fixtures – By Today's Date",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "resource": "fixture",
+        "operation": "getByDateRange",
+        "startDate": "={{ $now.format('yyyy-MM-dd') }}",
+        "endDate": "={{ $now.plus({days: 7}).format('yyyy-MM-dd') }}",
+        "include": ["participants", "league"],
+        "page": 1
+      },
+      "id": "fixtures-by-range",
+      "name": "Fixtures – Next 7 Days",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [900, 340]
+    },
+    {
+      "parameters": {
+        "resource": "fixture",
+        "operation": "getH2H",
+        "homeTeamId": 629,
+        "awayTeamId": 682,
+        "include": ["participants", "scores", "league"],
+        "page": 1
+      },
+      "id": "fixtures-h2h",
+      "name": "Fixtures – Ajax vs PSV (H2H)",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [900, 480]
+    },
+    {
+      "parameters": {
+        "resource": "fixture",
+        "operation": "searchByName",
+        "fixtureSearchQuery": "Ajax",
+        "include": ["participants", "league"],
+        "page": 1
+      },
+      "id": "fixtures-search",
+      "name": "Fixtures – Search 'Ajax'",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [900, 620]
+    },
+
+    {
+      "parameters": {
+        "content": "### Teams\nRetrieve team details, all teams in a season, or search by name.",
+        "height": 120,
+        "width": 360,
+        "color": 6
+      },
+      "id": "note-teams",
+      "name": "Sticky Note – Teams",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1200, 60]
+    },
+    {
+      "parameters": {
+        "resource": "team",
+        "operation": "getById",
+        "teamId": 629,
+        "include": ["venue", "coaches", "country"],
+        "page": 1
+      },
+      "id": "team-by-id",
+      "name": "Team – Ajax (ID 629)",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [1200, 200]
+    },
+    {
+      "parameters": {
+        "resource": "team",
+        "operation": "searchByName",
+        "teamSearchQuery": "PSV",
+        "include": ["venue", "country"],
+        "page": 1
+      },
+      "id": "team-search",
+      "name": "Team – Search 'PSV'",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [1200, 340]
+    },
+
+    {
+      "parameters": {
+        "content": "### Players\nSearch for players or get details by ID.",
+        "height": 120,
+        "width": 360,
+        "color": 2
+      },
+      "id": "note-players",
+      "name": "Sticky Note – Players",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1500, 60]
+    },
+    {
+      "parameters": {
+        "resource": "player",
+        "operation": "searchByName",
+        "playerSearchQuery": "Messi",
+        "include": ["nationality", "position"],
+        "page": 1
+      },
+      "id": "player-search",
+      "name": "Player – Search 'Messi'",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [1500, 200]
+    },
+
+    {
+      "parameters": {
+        "content": "### Leagues\nGet all leagues, live leagues, leagues by country, or search.",
+        "height": 120,
+        "width": 360,
+        "color": 7
+      },
+      "id": "note-leagues",
+      "name": "Sticky Note – Leagues",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1500, 380]
+    },
+    {
+      "parameters": {
+        "resource": "league",
+        "operation": "getLive",
+        "include": ["country"],
+        "page": 1
+      },
+      "id": "leagues-live",
+      "name": "Leagues – Currently Live",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [1500, 500]
+    },
+    {
+      "parameters": {
+        "resource": "league",
+        "operation": "searchByName",
+        "leagueSearchQuery": "Premier League",
+        "include": ["country", "currentSeason"],
+        "page": 1
+      },
+      "id": "leagues-search",
+      "name": "Leagues – Search 'Premier League'",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [1500, 640]
+    },
+
+    {
+      "parameters": {
+        "content": "### Standings & Seasons\nGet league standings for a season or the live standings for an active league.",
+        "height": 120,
+        "width": 360,
+        "color": 1
+      },
+      "id": "note-standings",
+      "name": "Sticky Note – Standings",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1800, 60]
+    },
+    {
+      "parameters": {
+        "resource": "standing",
+        "operation": "getLiveByLeague",
+        "leagueIdStanding": 72,
+        "page": 1
+      },
+      "id": "standings-live",
+      "name": "Standings – Eredivisie Live (ID 72)",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [1800, 200]
+    },
+    {
+      "parameters": {
+        "resource": "season",
+        "operation": "searchByName",
+        "seasonSearchQuery": "2025/2026",
+        "page": 1
+      },
+      "id": "seasons-search",
+      "name": "Season – Search '2025/2026'",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [1800, 340]
+    },
+
+    {
+      "parameters": {
+        "content": "### Error Handling Demo\nEnable 'Continue On Fail' on any SportMonks node to capture errors as output.\n\nThis node intentionally uses an invalid team ID to show the 404/empty result handling.",
+        "height": 160,
+        "width": 360,
+        "color": 1
+      },
+      "id": "note-errors",
+      "name": "Sticky Note – Error Handling",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [2100, 60]
+    },
+    {
+      "parameters": {
+        "resource": "team",
+        "operation": "getById",
+        "teamId": 999999999,
+        "include": [],
+        "page": 1
+      },
+      "id": "team-error-demo",
+      "name": "Error Demo – Invalid Team ID",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [2100, 260],
+      "continueOnFail": true
+    },
+
+    {
+      "parameters": {
+        "jsCode": "// Merge results from different branches into a summary report.\n// In a real workflow you would connect all branches to this node.\nconst item = $input.item.json;\nreturn {\n  _note: 'Connect all SportMonks nodes to this Code node to aggregate results',\n  received: item,\n  timestamp: new Date().toISOString()\n};\n"
+      },
+      "id": "summary",
+      "name": "Output Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2400, 500]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          { "node": "Livescores – Inplay", "type": "main", "index": 0 },
+          { "node": "Livescores – All Today", "type": "main", "index": 0 },
+          { "node": "Livescores – Latest Updated", "type": "main", "index": 0 },
+          { "node": "Fixtures – By Today's Date", "type": "main", "index": 0 },
+          { "node": "Fixtures – Next 7 Days", "type": "main", "index": 0 },
+          { "node": "Fixtures – Ajax vs PSV (H2H)", "type": "main", "index": 0 },
+          { "node": "Fixtures – Search 'Ajax'", "type": "main", "index": 0 },
+          { "node": "Team – Ajax (ID 629)", "type": "main", "index": 0 },
+          { "node": "Team – Search 'PSV'", "type": "main", "index": 0 },
+          { "node": "Player – Search 'Messi'", "type": "main", "index": 0 },
+          { "node": "Leagues – Currently Live", "type": "main", "index": 0 },
+          { "node": "Leagues – Search 'Premier League'", "type": "main", "index": 0 },
+          { "node": "Standings – Eredivisie Live (ID 72)", "type": "main", "index": 0 },
+          { "node": "Season – Search '2025/2026'", "type": "main", "index": 0 },
+          { "node": "Error Demo – Invalid Team ID", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Livescores – Inplay": {
+      "main": [[{ "node": "Output Summary", "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "triggerCount": 0,
+  "versionId": "1"
+}
