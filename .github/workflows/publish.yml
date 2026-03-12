@@ -1,3 +1,5 @@
+# Trigger: publish a GitHub Release (tag e.g. v0.1.0).
+# NPM_TOKEN: use an *Automation* token (npm → Access Tokens). Automation tokens bypass 2FA and work in CI.
 name: Publish to npm
 
 on:
@@ -41,7 +43,17 @@ jobs:
             exit 1
           fi
 
+      - name: Check NPM_TOKEN is set
+        run: |
+          if [ -z "$NPM_TOKEN" ]; then
+            echo "::error::NPM_TOKEN secret is not set. Add it in repo Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          echo "NPM_TOKEN is configured."
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish to npm
-        run: npm publish --provenance --access public
+        run: npm publish --provenance --access public --loglevel verbose
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

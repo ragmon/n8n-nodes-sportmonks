@@ -1,0 +1,151 @@
+{
+  "id": "sportmonks-demo-league-season",
+  "name": "SportMonks – League & Season (Free Tier Demo)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 400]
+    },
+    {
+      "parameters": {
+        "content": "## SportMonks – League & Season Demo\n\nThis workflow uses only **League** and **Season** resources, which are available on the **free** SportMonks subscription.\n\n**Setup:**\n1. Add a **SportMonks API** credential (API key from [sportmonks.com](https://www.sportmonks.com))\n2. Assign it to each SportMonks node\n3. Run with **Execute Workflow**\n\n**League:** Get All, Get by ID, Search by Name\n**Season:** Get All, Search by Name",
+        "height": 280,
+        "width": 420,
+        "color": 5
+      },
+      "id": "note-intro",
+      "name": "Sticky Note – Intro",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, 120]
+    },
+    {
+      "parameters": {
+        "content": "### League\nGet all leagues, a league by ID, or search by name.",
+        "height": 100,
+        "width": 320,
+        "color": 7
+      },
+      "id": "note-league",
+      "name": "Sticky Note – League",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [520, 80]
+    },
+    {
+      "parameters": {
+        "resource": "league",
+        "operation": "getAll",
+        "include": ["country", "currentSeason"],
+        "page": 1
+      },
+      "id": "league-get-all",
+      "name": "League – Get All",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [520, 200]
+    },
+    {
+      "parameters": {
+        "resource": "league",
+        "operation": "getById",
+        "leagueId": 8,
+        "include": ["country", "currentSeason"],
+        "page": 1
+      },
+      "id": "league-get-by-id",
+      "name": "League – Get by ID (8)",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [520, 360]
+    },
+    {
+      "parameters": {
+        "resource": "league",
+        "operation": "searchByName",
+        "leagueSearchQuery": "Premier League",
+        "include": ["country", "currentSeason"],
+        "page": 1
+      },
+      "id": "league-search",
+      "name": "League – Search 'Premier League'",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [520, 520]
+    },
+    {
+      "parameters": {
+        "content": "### Season\nGet all seasons or search by name (e.g. 2024/2025).",
+        "height": 100,
+        "width": 320,
+        "color": 1
+      },
+      "id": "note-season",
+      "name": "Sticky Note – Season",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [880, 80]
+    },
+    {
+      "parameters": {
+        "resource": "season",
+        "operation": "getAll",
+        "page": 1
+      },
+      "id": "season-get-all",
+      "name": "Season – Get All",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [880, 200]
+    },
+    {
+      "parameters": {
+        "resource": "season",
+        "operation": "searchByName",
+        "seasonSearchQuery": "2024/2025",
+        "page": 1
+      },
+      "id": "season-search",
+      "name": "Season – Search '2024/2025'",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [880, 360]
+    },
+    {
+      "parameters": {
+        "resource": "season",
+        "operation": "getById",
+        "seasonId": 235,
+        "page": 1
+      },
+      "id": "season-get-by-id",
+      "name": "Season – Get by ID (235)",
+      "type": "n8n-nodes-sportmonks.sportMonks",
+      "typeVersion": 1,
+      "position": [880, 520]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          { "node": "League – Get All", "type": "main", "index": 0 },
+          { "node": "League – Get by ID (8)", "type": "main", "index": 0 },
+          { "node": "League – Search 'Premier League'", "type": "main", "index": 0 },
+          { "node": "Season – Get All", "type": "main", "index": 0 },
+          { "node": "Season – Search '2024/2025'", "type": "main", "index": 0 },
+          { "node": "Season – Get by ID (235)", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "triggerCount": 0,
+  "versionId": "1"
+}

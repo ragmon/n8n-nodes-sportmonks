@@ -21,6 +21,8 @@ I just published **`n8n-nodes-sportmonks`** — a community node for [n8n](https
 
 📖 GitHub: https://github.com/ragmon/n8n-nodes-sportmonks
 
+**Screenshots:** Attach 1–3 images from `docs/screenshots/` (e.g. workflow canvas, node in panel, successful execution) for better engagement. See `docs/screenshots/README.md` for suggested filenames.
+
 This was a self-chosen assignment to explore building n8n community nodes end-to-end — from design to TypeScript implementation, packaging, CI/CD with GitHub Actions, and public npm publishing.
 
 If you're building sports analytics, fantasy football automation, or betting platform workflows on n8n — give it a try and let me know what you think!
@@ -48,6 +50,8 @@ I recently built and published an open-source **n8n community node** that integr
 - Teams, Players, Leagues, Standings, Seasons
 - Full Include selector (participants, scores, events, periods, league, round…)
 - Proper error handling for 401/403/429/500 with user-friendly messages
+
+**Screenshots:** I’ve attached [1–2 screenshots from `docs/screenshots/`]: the SportMonks node in the n8n panel and a demo workflow in action. You can use these in your docs or blog if helpful.
 
 **Why this matters for SportMonks:**
 n8n has hundreds of thousands of users building automation workflows. A native community node makes it trivially easy for non-developers to use your API without writing a line of code — expanding your potential user base significantly.

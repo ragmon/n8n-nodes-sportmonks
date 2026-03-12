@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-sportmonks",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "n8n community node for the SportMonks Football API v3 — live scores, fixtures, teams, players, leagues and standings",
   "keywords": [
     "n8n-community-node-package",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ragmon/n8n-nodes-sportmonks.git"
+    "url": "git+https://github.com/ragmon/n8n-nodes-sportmonks.git"
   },
   "bugs": {
     "url": "https://github.com/ragmon/n8n-nodes-sportmonks/issues"

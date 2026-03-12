@@ -116,9 +116,21 @@ See [`workflows/`](workflows/) for importable workflow JSON files:
 | Workflow | Description |
 |---|---|
 | `demo-all-features.json` | Demonstrates every resource and operation with sticky-note explanations |
+| `demo-league-season.json` | League & Season only — works with the free SportMonks subscription |
 | `livescore-monitor.json` | Polls inplay scores every 30 seconds and formats a live match report |
 
 To import: **Workflows → Import from file** in your n8n instance.
+
+### Screenshots
+
+| Screenshot | Description |
+|------------|-------------|
+| [![League & Season demo workflow](docs/screenshots/01-workflow-league-season-demo.png)](docs/screenshots/01-workflow-league-season-demo.png) | **League & Season demo** — Free-tier workflow with Get All, Get by ID, and Search for League and Season |
+| [![Full feature demo workflow](docs/screenshots/02-workflow-full-feature-demo.png)](docs/screenshots/02-workflow-full-feature-demo.png) | **Full feature demo** — All resources (Livescores, Fixtures, Teams, Players, Leagues, Standings, Seasons) with sticky notes |
+| [![Livescores node execution](docs/screenshots/03-node-livescores-execution.png)](docs/screenshots/03-node-livescores-execution.png) | **Livescores node** — Get Inplay configuration and output (subscription info when no live games or on free plan) |
+| [![Node details and actions](docs/screenshots/04-node-details-actions.png)](docs/screenshots/04-node-details-actions.png) | **Node details** — SportMonks Football node in n8n: description, source, and list of 28 actions |
+
+All screenshots are in [`docs/screenshots/`](docs/screenshots/).
 
 ---
 

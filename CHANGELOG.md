@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-03-12
+
+### Added
+- **League & Season demo workflow** (`workflows/demo-league-season.json`) — free-tier demo for League and Season resources
+- **Screenshots** in `docs/screenshots/` and Screenshots section in README (workflow canvases, node config, node details)
+
+### Changed
+- README: Example Workflows table includes `demo-league-season.json` and new Screenshots subsection
+- `docs/screenshots/README.md` updated to describe current screenshots and optional future ones
+
 ## [0.1.0] - 2026-03-11
 
 ### Added

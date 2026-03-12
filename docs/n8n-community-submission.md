@@ -53,6 +53,8 @@ Verified nodes appear in the **Nodes** panel in n8n and get a verified badge.
    - Documentation (README on npm/GitHub)
    - From **May 1, 2026**: publish via GitHub Action with [provenance](https://docs.npmjs.com/generating-provenance-statements) (your `publish.yml` already uses `--provenance`).
 
+**Important:** If your npm account has 2FA enabled, use an **Automation** token for `NPM_TOKEN` (not a classic Publish token). Automation tokens bypass the one-time password and work in CI. Create one at [npm → Access Tokens](https://www.npmjs.com/access-tokens) → **Generate New Token** → **Automation**.
+
 If approved, the node will be listed as verified and discoverable in the Nodes panel.
 
 ---
